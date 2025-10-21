@@ -13,15 +13,16 @@
   <body>
     <div class="container">
       <h1 class="title">Join Chat Room</h1>
-      <form class="join-form">
+      <form class="join-form" id="join-form">
         <input
           type="text"
           placeholder="Enter your username..."
           class="input"
+          id="username"
           required
         />
 
-        <select class="select" required>
+        <select class="select" name="room" id="room">
           <option value="" disabled selected>Select a room</option>
           <option value="general">General</option>
           <option value="tech">Tech</option>
@@ -31,5 +32,8 @@
         <button type="submit" class="btn">Join</button>
       </form>
     </div>
+
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="js/chat.js"></script>
   </body>
 </html>
