@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="WebSocket Chat" />
+    <meta name="keywords" content="WebSocket, Chat, Node.js" />
+    <meta name="author" content="Safeya Yasien" />
+    <link rel="stylesheet" href="css/style.css" />
+
+    <title>WebSocket Chat</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">Join Chat Room</h1>
+      <form class="join-form">
+        <input
+          type="text"
+          placeholder="Enter your username..."
+          class="input"
+          required
+        />
+
+        <select class="select" required>
+          <option value="" disabled selected>Select a room</option>
+          <option value="general">General</option>
+          <option value="tech">Tech</option>
+          <option value="random">Random</option>
+        </select>
+
+        <button type="submit" class="btn">Join</button>
+      </form>
+    </div>
+  </body>
+</html>
