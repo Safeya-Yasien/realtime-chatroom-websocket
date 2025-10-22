@@ -2,7 +2,9 @@
 
 # Features
 
-- html ui for chat
+- Real-time chat
+- Chat rooms
+-
 
 # Tasks Arrangement
 

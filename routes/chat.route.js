@@ -7,12 +7,12 @@ router.get("/", (req, res) => {
   res.sendFile(join(__dirname, "../index.html"));
 });
 
-router.get("/chat", (req, res) => {
-  res.sendFile(join(__dirname, "../chat.html"));
+router.get("/chatform", (req, res) => {
+  res.sendFile(join(__dirname, "../chatform.html"));
 });
 
 router.get("/chatroom", (req, res) => {
-  res.sendFile(join(__dirname, "../chatRoom.html"));
+  res.sendFile(join(__dirname, "../chatroom.html"));
 });
 
 module.exports = router;

@@ -21,6 +21,4 @@ joinForm.addEventListener("submit", (e) => {
   }
 
   window.location.href = `/chatroom?username=${username}&room=${room}`;
-
-  console.log("Joining room:", room, "as user:", username);
 });

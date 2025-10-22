@@ -14,9 +14,27 @@ app.use(express.static("public"));
 app.use("/", require("./routes/chat.route"));
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  // Listen for 'joinRoom' events from clients
+  socket.on("joinRoom", ({ username, room }) => {
+    socket.join(room);
 
-  console.log("Socket ID:", socket.id);
+    // Send welcome message to the user
+    socket.emit("message", {
+      message: `Welcome to the chat room: ${room}, ${username}!`,
+      userName: "ChatBot",
+    });
+
+    // Broadcast to other users in the room that a new user has joined
+    socket.broadcast.to(room).emit("message", {
+      message: `${username} has joined the chat`,
+      userName: "ChatBot",
+    });
+
+    // Listen for 'message' events from clients
+    socket.on("message", ({ message, userName }) => {
+      io.to(room).emit("message", { message, userName });
+    });
+  });
 });
 
 server.listen(port, () => {

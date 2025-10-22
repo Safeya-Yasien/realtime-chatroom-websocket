@@ -12,26 +12,22 @@
     <div class="chat-container">
       <!-- Sidebar -->
       <aside class="sidebar">
-        <h2 class="room-name" id="room-name">Room Name</h2>
-        <ul class="user-list" id="users">
-          <li>Safeya</li>
-          <li>Ali</li>
-          <li>Nada</li>
-        </ul>
+        <h2 class="room-name" id="room-name"></h2>
+        <ul class="user-list" id="users"></ul>
       </aside>
 
       <!-- Chat main area -->
       <main class="chat-main">
         <div class="messages" id="messages">
           <div class="message">
-            <p class="meta">Safeya <span>10:30 AM</span></p>
+            <p class="meta"><span class="" id="user-name"></span> <span class="" id="message-time"></span></p>
             <p class="text">Hey everyone 👋</p>
           </div>
         </div>
 
         <form id="message-form" class="message-form">
           <input
-            id="msg"
+            id="message-input"
             type="text"
             placeholder="Type a message..."
             required
@@ -43,5 +39,6 @@
     </div>
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <script src="js/chatroom.js"></script>
   </body>
 </html>
