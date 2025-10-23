@@ -1,8 +1,8 @@
 # WebSocket
 
-![Home page](./public/images/home.png)
-
 ![Chat form](./public/images/chatform.png)
+
+![Chat room](./public/images/chatroom.png)
 
 # user flow
 
