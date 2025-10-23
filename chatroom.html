@@ -19,22 +19,26 @@
 
       <!-- Chat main area -->
       <main class="chat-main">
-        <div class="messages" id="messages">  </div>
+        <div class="messages" id="messages"></div>
 
         <form id="message-form" class="message-form">
-          <input
-            id="message-input"
-            type="text"
-            placeholder="Type a message..."
-            required
-            autocomplete="off"
-          />
-          <button class="btn">Send</button>
+          <div class="typing-indicator" id="typing-indicator">بب</div>
+          <div class="input-container">
+            <input
+              id="message-input"
+              type="text"
+              placeholder="Type a message..."
+              required
+              autocomplete="off"
+            />
+            <button class="btn">Send</button>
+          </div>
         </form>
       </main>
     </div>
 
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="js/chatroom.js"></script>
+    <script src="js/helpers.js"></script>
   </body>
 </html>

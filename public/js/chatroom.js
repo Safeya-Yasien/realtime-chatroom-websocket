@@ -5,11 +5,10 @@ const userName = urlSearchParams.get("username");
 const roomName = urlSearchParams.get("room");
 
 const roomNameElement = document.getElementById("room-name");
+const messageInput = document.getElementById("message-input");
+const typingIndicatorElement = document.getElementById("typing-indicator");
 const usersListElement = document.getElementById("users");
 const messageFormElement = document.getElementById("message-form");
-const messagesContainerElement = document.getElementById("messages");
-const userNameElement = document.getElementById("user-name");
-const messageTimeElement = document.getElementById("message-time");
 const leaveBtnElement = document.getElementById("leave-btn");
 
 roomNameElement.textContent = ` Room: ${roomName}`;
@@ -18,33 +17,47 @@ const socket = io();
 
 socket.emit("joinRoom", { username: userName, room: roomName });
 
+messageInput.addEventListener("input", () => {
+  socket.emit("typing");
+
+  const typingTimer = setTimeout(() => {
+    socket.emit("stopTyping");
+    clearTimeout(typingTimer);
+  }, 2000);
+});
+
+socket.on("typing", ({ username }) => {
+  typingIndicatorElement.textContent = `${username} is typing...`;
+  typingIndicatorElement.classList.add("active");
+});
+
+socket.on("stopTyping", () => {
+  typingIndicatorElement.textContent = "";
+  typingIndicatorElement.classList.remove("active");
+});
+
 socket.on("users", (users) => {
   usersListElement.innerHTML = "";
-  for (const user in users) {
+  users.forEach((user) => {
     const userElement = document.createElement("li");
-    userElement.textContent = users[user].username;
+    userElement.textContent = user.username;
     usersListElement.appendChild(userElement);
     usersListElement.scrollTop = usersListElement.scrollHeight;
-  }
+  });
 });
 
 messageFormElement.addEventListener("submit", (e) => {
   e.preventDefault();
   const messageInput = document.getElementById("message-input");
   const message = messageInput.value.trim();
+  if (!message) return;
 
   socket.emit("message", { message });
 });
 
 socket.on("message", (message) => {
-  const messageElement = document.createElement("div");
-  messageElement.classList.add("message");
-  messageElement.innerHTML = `
-    <p class="meta">${message.userName} <span>${message.time}</span></p>
-    <p class="text">${message.message}</p>
-  `;
-  messagesContainerElement.appendChild(messageElement);
-  messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;
+  const messageElement = createMessageElement(message);
+  appendMessageElement(messageElement);
   messageFormElement.reset();
 });
 
@@ -61,13 +74,7 @@ leaveBtnElement.addEventListener("click", () => {
   }
 });
 
-socket.on("userLeave", ({ message, userName }) => {
-  const messageElement = document.createElement("div");
-  messageElement.classList.add("message");
-  messageElement.innerHTML = `
-    <p class="meta">${userName} <span>${new Date().toLocaleTimeString()}</span></p>
-    <p class="text">${message}</p>
-  `;
-  messagesContainerElement.appendChild(messageElement);
-  messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;
+socket.on("userLeave", (message) => {
+  const messageElement = createMessageElement(message);
+  appendMessageElement(messageElement);
 });

@@ -61,3 +61,4 @@
         - so i save the username and room in the users array with socket.id as the key
         - and every time later the user not need to send the username and room to the server because i already saved the username and room in the users array
         - so i build a function to get the user depend on his id
+        

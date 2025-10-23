@@ -20,12 +20,29 @@ app.use(express.static("public"));
 
 app.use("/", require("./routes/chat.route"));
 
+const handleUserLeave = (socket) => {
+  const user = getUserById(socket.id);
+  if (!user) return;
+
+  socket.leave(user.room);
+  removeUser(socket.id);
+
+  socket.broadcast
+    .to(user.room)
+    .emit(
+      "userLeave",
+      addMessage(`${user.username} has left the chat`, "ChatBot")
+    );
+
+  io.to(user.room).emit("users", getUsersRoom(user.room));
+};
+
 io.on("connection", (socket) => {
   socket.on("joinRoom", ({ username, room }) => {
     addUser({ id: socket.id, username, room });
     socket.join(room);
 
-    socket.emit("users", getUsersRoom(room));
+    io.to(room).emit("users", getUsersRoom(room));
 
     // Send welcome message to the user
     socket.emit(
@@ -42,48 +59,33 @@ io.on("connection", (socket) => {
       );
   });
 
+  socket.on("typing", () => {
+    const user = getUserById(socket.id);
+    if (!user) return;
+
+    socket.broadcast.to(user.room).emit("typing", { username: user.username });
+  });
+
+  socket.on("stopTyping", () => {
+    const user = getUserById(socket.id);
+    if (!user) return;
+    socket.broadcast
+      .to(user.room)
+      .emit("stopTyping", { username: user.username });
+  });
+
   // Listen for 'message' events from clients
   socket.on("message", ({ message }) => {
     const user = getUserById(socket.id);
+    if (!user || !message.trim()) return;
     io.to(user.room).emit("message", addMessage(message, user.username));
   });
 
-  socket.on("leaveRoom", () => {
-    const user = getUserById(socket.id);
-    if (user) {
-      socket.leave(user.room);
-      removeUser(socket.id);
-      socket.broadcast.to(user.room).emit("userLeave", {
-        message: `${user.username} has left the chat`,
-        userName: "ChatBot",
-      });
-      io.to(user.room).emit("users", getUsersRoom(user.room));
-    }
-  });
+  socket.on("leaveRoom", () => handleUserLeave(socket));
 
-  socket.on("disconnect", () => {
-    const user = getUserById(socket.id);
-
-    if (user) {
-      socket.leave(user.room);
-      removeUser(socket.id);
-
-      socket.broadcast.to(user.room).emit("userLeave", {
-        message: `${user.username} has left the chat`,
-        userName: "ChatBot",
-      });
-      io.to(user.room).emit("users", getUsersRoom(user.room));
-    }
-  });
+  socket.on("disconnect", () => handleUserLeave(socket));
 });
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
-
-// handle files organize
-// handle time in messages
-// handle leave room
-// handle user list update on leave
-// handle username in messages
-// handle message typing
