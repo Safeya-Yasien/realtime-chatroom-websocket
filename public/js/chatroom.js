@@ -36,12 +36,12 @@ messageFormElement.addEventListener("submit", (e) => {
   socket.emit("message", { message });
 });
 
-socket.on("message", ({ message, userName }) => {
+socket.on("message", (message) => {
   const messageElement = document.createElement("div");
   messageElement.classList.add("message");
   messageElement.innerHTML = `
-    <p class="meta">${userName} <span>${new Date().toLocaleTimeString()}</span></p>
-    <p class="text">${message}</p>
+    <p class="meta">${message.userName} <span>${message.time}</span></p>
+    <p class="text">${message.message}</p>
   `;
   messagesContainerElement.appendChild(messageElement);
   messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;

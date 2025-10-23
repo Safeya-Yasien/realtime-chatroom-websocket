@@ -14,3 +14,14 @@
 4- create socket.io client
 5- build chat room page
 6- build chat room page with socket.io
+
+# Technologies
+
+- Node.js
+- Express
+- Socket.io
+- HTML
+- CSS
+- JavaScript
+- dotenv
+- Moment.js

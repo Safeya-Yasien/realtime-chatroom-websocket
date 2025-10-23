@@ -8,6 +8,7 @@ const {
   getUserById,
   removeUser,
 } = require("./utils/users");
+const { addMessage } = require("./utils/messages");
 
 const app = express();
 const server = createServer(app);
@@ -27,22 +28,24 @@ io.on("connection", (socket) => {
     socket.emit("users", getUsersRoom(room));
 
     // Send welcome message to the user
-    socket.emit("message", {
-      message: `Welcome to the chat room: ${room}, ${username}!`,
-      userName: "ChatBot",
-    });
+    socket.emit(
+      "message",
+      addMessage(`Welcome to the chat room: ${room}, ${username}!`, "ChatBot")
+    );
 
     // Broadcast to other users in the room that a new user has joined
-    socket.broadcast.to(room).emit("message", {
-      message: `${username} has joined the chat`,
-      userName: "ChatBot",
-    });
+    socket.broadcast
+      .to(room)
+      .emit(
+        "message",
+        addMessage(`${username} has joined the chat`, "ChatBot")
+      );
   });
 
   // Listen for 'message' events from clients
   socket.on("message", ({ message }) => {
     const user = getUserById(socket.id);
-    io.to(user.room).emit("message", { message, userName: user.username });
+    io.to(user.room).emit("message", addMessage(message, user.username));
   });
 
   socket.on("leaveRoom", () => {

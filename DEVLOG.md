@@ -48,9 +48,9 @@
         - at first i made return users.filter but i forgot to update users array so i back again and update the users array in "removeUser" function by using splice
         - and we send the user leave message to all users in the room then redirect the outed user to the chatform page
         - call "getUsersRoom" after removing the user to display it again in sidebar after the user out of the room
-        - after i call "getUsersRoom" i found a problem with the users name
+        <!-- - after i call "getUsersRoom" i found a problem with the users name
         because every time i refresh the page the users name is the same because the socket id change every time
-        - so i
+        - so i -->
 
 
     - organize the code by separating the functions such add users to array, send all users, update users list,
