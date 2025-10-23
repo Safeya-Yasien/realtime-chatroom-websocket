@@ -1,5 +1,9 @@
 # WebSocket
 
+![Home page](./public/images/home.png)
+
+![Chat form](./public/images/chatform.png)
+
 # user flow
 
 1- user enter home page
