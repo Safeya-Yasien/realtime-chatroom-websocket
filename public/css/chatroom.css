@@ -61,6 +61,23 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.leave-btn {
+  margin-top: 1rem;
+  padding: 0.7rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: #ff4d4d;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.leave-btn:hover {
+  background: #e63946;
+  transform: scale(1.05);
+}
+
 /* Chat area */
 .chat-main {
   flex: 1;

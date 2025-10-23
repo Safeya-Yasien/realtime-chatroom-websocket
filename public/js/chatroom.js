@@ -10,6 +10,7 @@ const messageFormElement = document.getElementById("message-form");
 const messagesContainerElement = document.getElementById("messages");
 const userNameElement = document.getElementById("user-name");
 const messageTimeElement = document.getElementById("message-time");
+const leaveBtnElement = document.getElementById("leave-btn");
 
 roomNameElement.textContent = ` Room: ${roomName}`;
 
@@ -17,12 +18,14 @@ const socket = io();
 
 socket.emit("joinRoom", { username: userName, room: roomName });
 
-socket.on("joinRoom", ({ username, room }) => {
-  console.log(`${username} has joined the room: ${room}`);
-  const userElement = document.createElement("li");
-  userElement.textContent = username;
-  usersListElement.appendChild(userElement);
-  usersListElement.scrollTop = usersListElement.scrollHeight;
+socket.on("users", (users) => {
+  usersListElement.innerHTML = "";
+  for (const user in users) {
+    const userElement = document.createElement("li");
+    userElement.textContent = users[user].username;
+    usersListElement.appendChild(userElement);
+    usersListElement.scrollTop = usersListElement.scrollHeight;
+  }
 });
 
 messageFormElement.addEventListener("submit", (e) => {
@@ -30,14 +33,10 @@ messageFormElement.addEventListener("submit", (e) => {
   const messageInput = document.getElementById("message-input");
   const message = messageInput.value.trim();
 
-  //   send event to server called message with the message content
-  socket.emit("message", { message, userName, roomName });
+  socket.emit("message", { message });
 });
 
 socket.on("message", ({ message, userName }) => {
-  userNameElement.textContent = userName;
-  messageTimeElement.textContent = new Date().toLocaleTimeString();
-
   const messageElement = document.createElement("div");
   messageElement.classList.add("message");
   messageElement.innerHTML = `
@@ -49,14 +48,26 @@ socket.on("message", ({ message, userName }) => {
   messageFormElement.reset();
 });
 
-// emit means send data to the server
+// leave room
+leaveBtnElement.addEventListener("click", () => {
+  const leaveRoom = confirm("Are you sure you want to leave the chatroom?");
 
-/**
- * when the user enter the room send welcome message with username with time of entering
- * when the user send message appears on all users screens with username and time of sending
- * after the user click on send empty the input field
- * add the message to screen or chat to appears in html page
- * send welcome message to the user when he enter the room for the first time or refresh the page or re-enter the room
- */
+  if (leaveRoom) {
+    socket.emit("leaveRoom");
 
-// on means receive data from the server
+    setTimeout(() => {
+      window.location.href = `/chatform`;
+    }, 1000);
+  }
+});
+
+socket.on("userLeave", ({ message, userName }) => {
+  const messageElement = document.createElement("div");
+  messageElement.classList.add("message");
+  messageElement.innerHTML = `
+    <p class="meta">${userName} <span>${new Date().toLocaleTimeString()}</span></p>
+    <p class="text">${message}</p>
+  `;
+  messagesContainerElement.appendChild(messageElement);
+  messagesContainerElement.scrollTop = messagesContainerElement.scrollHeight;
+});
